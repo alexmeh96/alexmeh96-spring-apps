@@ -4,6 +4,7 @@ import com.example.app2.entity.Company;
 import com.example.app2.integration.IntegrationBaseTest;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.persistence.EntityManager;
 import java.util.Map;
@@ -15,12 +16,22 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class CompanyRepositoryTest extends IntegrationBaseTest {
 
     private final EntityManager entityManager;
+    private final TransactionTemplate transactionTemplate;  // нужно для ручного управления транзакциями
 
     @Test
     void findById() {
         Company company = entityManager.find(Company.class, 1);
         assertNotNull(company);
         assertThat(company.getLocales()).hasSize(2);
+    }
+
+    @Test
+    void findByIdByTransactionTemplate() {
+        transactionTemplate.executeWithoutResult(tx -> {
+            Company company = entityManager.find(Company.class, 1);
+            assertNotNull(company);
+            assertThat(company.getLocales()).hasSize(2);
+        });
     }
 
     @Test
