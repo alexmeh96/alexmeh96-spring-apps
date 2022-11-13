@@ -1,0 +1,16 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          mehAuth:
+            authorization-grant-type: client_credentials
+            scope: oidc
+            client-id: yourClientId
+            client-secret: yourClientSecret
+        provider:
+          mehAuth:
+            token-uri: https://yourTokenUri
+
+api:
+  baseUrl:
